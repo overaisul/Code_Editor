@@ -1,22 +1,18 @@
-import util from "util";
-import ChildProcess from "child_process";
-import fs from "fs/promises";
-import uuid4 from "uuid4";
-import { REACT_PROJECT_COMMAND } from "../config/serverConfig.js";
-
-const execPromisified = util.promisify(ChildProcess.exec);
+import {
+  createProjectService,
+  getProjectTreeService,
+} from "../service/projectService.js";
 
 export const createProjectController = async (req, res) => {
-  //Create a unique id for the project
-  const projectId = uuid4();
-  console.log("new project id", projectId);
-  await fs.mkdir(`./projects/${projectId}`);
-
-  //after this call the npm create vite command on new project folder.
-
-  const reponse = await execPromisified(REACT_PROJECT_COMMAND, {
-    cwd: `./projects/${projectId}`,
-  });
-
+  const projectId = await createProjectService();
   return res.status(200).json({ message: "Project Created", data: projectId });
+};
+
+export const getProjectTree = async (req, res) => {
+  const tree = await getProjectTreeService(req.params.projectId);
+  return res.status(200).json({
+    data: tree,
+    success: true,
+    message: "Succesfully fetched Project Tree",
+  });
 };
