@@ -8,6 +8,6 @@ const router = express.Router();
 
 router.post("/", createProjectController);
 
-router.get("/:projectId", getProjectTree);
+router.get("/:projectId/tree", getProjectTree);
 
 export default router;
